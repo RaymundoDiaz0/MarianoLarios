@@ -7,6 +7,7 @@ public class Hilo extends Thread{
     boolean pausar;
     boolean detener;
     boolean inicio;
+    boolean ejec;
     
     Hilo(JTextArea area, rCompartido rc){
         this.area = area;
@@ -18,40 +19,35 @@ public class Hilo extends Thread{
     
     public void run(){
        try{
-           inicio=true;
+            inicio=true;
             while(true){
-                rc.setRC(this.getName());
-                area.append(rc.getRC()+": Eats"+"\n");
-                Thread.sleep(2000);
-                synchronized(this){
-                    while(pausar){
-                        wait();
-                    }
-                    if(detener){
-                        break;
-                    }
+            rc.setRC(this.getName());
+            area.append(rc.getRC()+": Eats\n");
+            Thread.sleep(500);
+            if(ejec == false){
+                while(pausar == true)
+                {
+                    Thread.sleep(1);
+                }
+                if(detener == true)
+                    break;
                 }
             }
         }catch(Exception e ){ e.printStackTrace();}
     }
     
-    synchronized public void pausar()
-   {
+    public void pausar(){
        pausar=true;
-       detener=false;
-       notify();
    }
    
-   synchronized void reanudar(){
+    void reanudar(){
         detener=false;
         pausar=false;
-        notify();
     }
-   
-   synchronized void detener(){
+    
+    void detener(){
        detener=true;
        pausar=false;
-       notify();
-   }
+    }
     
 }
